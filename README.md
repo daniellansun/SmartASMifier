@@ -8,4 +8,5 @@ A utility to compile Java source code to ASM source code
 ## Usage
 ```groovy SmartASMifier.groovy <the paths of java source files>```
 
-For example:  ```groovy SmartASMifier.groovy jsrc/HelloWorld.java jsrc/HelloWorld2.java```
+For example:  
+```groovy SmartASMifier.groovy jsrc/HelloWorld.java jsrc/HelloWorld2.java```
