@@ -42,27 +42,27 @@ public class SmartASMifier {
     private SmartASMifier() {}
 
     public static String asmify(String... paths) {
-    		paths.each { path ->
-		        File javaSrcFile = compileJava(path)
+        paths.each { path ->
+            File javaSrcFile = compileJava(path)
 
-		        File javaSrcDir = javaSrcFile.getParentFile()
-		        String javaSrcFileName = javaSrcFile.name
+            File javaSrcDir = javaSrcFile.getParentFile()
+            String javaSrcFileName = javaSrcFile.name
 
-		        List<File> classFiles = javaSrcDir.listFiles().grep { f ->
-		            f.name ==~ /${
-		                javaSrcFileName.replaceAll(/(.+?)[.]java$/, '$1')
-		            }[$]?.*[.]class/
-		        }
+            List<File> classFiles = javaSrcDir.listFiles().grep { f ->
+                f.name ==~ /${
+                    javaSrcFileName.replaceAll(/(.+?)[.]java$/, '$1')
+                }[$]?.*[.]class/
+            }
 
-		        classFiles.each { classFile ->
-		            try {
-			            	String asmSrc = "// ${classFile.canonicalPath}\n${compileClass(classFile)}"
-			            	println new Formatter().formatSource(asmSrc);
-		            } finally {
-		            		classFile.delete()
-		            }
-		        }
-    		}
+            classFiles.each { classFile ->
+                try {
+                    String asmSrc = "// ${classFile.canonicalPath}\n${compileClass(classFile)}"
+                    println new Formatter().formatSource(asmSrc);
+                } finally {
+                    classFile.delete()
+                }
+            }
+        }
     }
 
     private static File compileJava(String path) {
