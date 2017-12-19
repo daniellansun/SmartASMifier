@@ -50,7 +50,7 @@ public class SmartASMifier {
 
             List<File> classFiles = javaSrcDir.listFiles().grep { f ->
             		String javaSrcFileNameWithoutExt = javaSrcFileName.replaceAll(/(.+?)[.]java$/, '$1')
-                f.name ==~ /${javaSrcFileNameWithoutExt}([$].*)?[.]class/
+                f.name ==~ /${javaSrcFileNameWithoutExt}([$].+)?[.]class/
             }
 
             classFiles.each { classFile ->
