@@ -1,5 +1,5 @@
 # SmartASMifier
-A utility to compile Java source code to ASM source code
+A utility to compile Java source code to ASM source code(or bytecode as text)
 
 ## Prerequisite
 * Install JDK 8+
