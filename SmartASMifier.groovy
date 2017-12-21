@@ -40,8 +40,8 @@ import com.google.googlejavaformat.java.Formatter
  */
 public class SmartASMifier {
     private SmartASMifier() {}
-
-    public static String asmify(String... paths) {
+    
+    public static String asmify(boolean showBytecode, String... paths) {
         paths.each { path ->
             File javaSrcFile = compileJava(path)
 
@@ -55,8 +55,16 @@ public class SmartASMifier {
 
             classFiles.each { classFile ->
                 try {
-                    String asmSrc = "// ${classFile.canonicalPath}\n${compileClass(classFile)}"
-                    println new Formatter().formatSource(asmSrc);
+                		String result
+                    String asmSrc = "// ${classFile.canonicalPath}\n${compileClass(showBytecode, classFile)}"
+                    
+                    if (showBytecode) {
+                        result = asmSrc
+                    } else {
+                        result = new Formatter().formatSource(asmSrc)
+                    }
+                    
+                    println result
                 } finally {
                     classFile.delete()
                 }
@@ -79,20 +87,21 @@ public class SmartASMifier {
         return javaSrcFile
     }
 
-    private static String compileClass(File file) {
+    private static String compileClass(boolean showBytecode, File file) {
         def sw = new StringWriter()
-        new ClassReader(file.bytes).accept(new TraceClassVisitor(null, new ASMifier(), new PrintWriter(sw)), 0)
+        new ClassReader(file.bytes).accept(showBytecode ? new TraceClassVisitor(new PrintWriter(sw)) : new TraceClassVisitor(null, new ASMifier(), new PrintWriter(sw)), 0)
 
         return sw.toString()
     }
-
+    
+    public static final String BYTECODE_OPT = '-b'
     public static void main(String[] args) {
         if (args.size() == 0) {
-            println "Usage: ./asmify.sh <the paths of java source files>\nFor example: ./asmify.sh jsrc/HelloWorld.java jsrc/HelloWorld2.java"
+            println "Usage:\n./asmify.sh [-b] <the paths of java source files>\nShow ASM source code:\n./asmify.sh jsrc/HelloWorld.java jsrc/HelloWorld2.java\nShow bytecode:\n./asmify.sh -b jsrc/HelloWorld.java jsrc/HelloWorld2.java"
             System.exit(1)
         }
-
-        SmartASMifier.asmify(args)
+        
+        SmartASMifier.asmify(args.contains(BYTECODE_OPT), args.grep { it != BYTECODE_OPT } as String[])
     }
 }
 
