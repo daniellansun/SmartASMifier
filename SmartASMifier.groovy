@@ -40,30 +40,29 @@ import com.google.googlejavaformat.java.Formatter
  */
 public class SmartASMifier {
     private SmartASMifier() {}
-    
+
     public static String asmify(boolean showBytecode, String... paths) {
         paths.each { path ->
-            File javaSrcFile = compileJava(path)
-
+            File javaSrcFile = new File(compileJava(path).canonicalPath) // Create a new File instance to avoid `getParentFile()` returning null
             File javaSrcDir = javaSrcFile.getParentFile()
             String javaSrcFileName = javaSrcFile.name
 
             List<File> classFiles = javaSrcDir.listFiles().grep { f ->
-            		String javaSrcFileNameWithoutExt = javaSrcFileName.replaceAll(/(.+?)[.]java$/, '$1')
+                String javaSrcFileNameWithoutExt = javaSrcFileName.replaceAll(/(.+?)[.]java$/, '$1')
                 f.name ==~ /${javaSrcFileNameWithoutExt}([$].+)?[.]class/
             }
 
             classFiles.each { classFile ->
                 try {
-                		String result
+                    String result
                     String asmSrc = "// ${classFile.canonicalPath}\n${compileClass(showBytecode, classFile)}"
-                    
+
                     if (showBytecode) {
                         result = asmSrc
                     } else {
                         result = new Formatter().formatSource(asmSrc)
                     }
-                    
+
                     println result
                 } finally {
                     classFile.delete()
@@ -93,15 +92,15 @@ public class SmartASMifier {
 
         return sw.toString()
     }
-    
+
     public static final String BYTECODE_OPT = '-b'
+
     public static void main(String[] args) {
         if (args.size() == 0) {
             println "Usage:\n./asmify.sh [-b] <the paths of java source files>\nShow ASM source code:\n./asmify.sh jsrc/HelloWorld.java jsrc/HelloWorld2.java\nShow bytecode:\n./asmify.sh -b jsrc/HelloWorld.java jsrc/HelloWorld2.java"
             System.exit(1)
         }
-        
+
         SmartASMifier.asmify(args.contains(BYTECODE_OPT), args.grep { it != BYTECODE_OPT } as String[])
     }
 }
-

@@ -6,7 +6,9 @@ A utility to compile Java source code to ASM source code
 * Install Apache Groovy 2.4.12+
 
 ## Usage
-```./asmify.sh [-b] <the paths of java source files>```
+```
+./asmify.sh [-b] <the paths of java source files>
+```
 
 ## For example  
 **Show ASM source code**:  

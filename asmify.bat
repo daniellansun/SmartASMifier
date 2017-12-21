@@ -1,2 +1,2 @@
 @echo off
-call groovy SmartASMifier.groovy %*
+call groovy %~dp0\SmartASMifier.groovy %*

@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-groovy SmartASMifier.groovy "$@"
+groovy "$(dirname "$0")/SmartASMifier.groovy" "$@"
