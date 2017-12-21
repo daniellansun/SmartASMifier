@@ -88,7 +88,7 @@ public class SmartASMifier {
 
     public static void main(String[] args) {
         if (args.size() == 0) {
-            println "The paths of Java source files are required!\nUsage: groovy SmartASMifier.groovy <the paths of java source files>\nFor example: groovy SmartASMifier.groovy jsrc/HelloWorld.java jsrc/HelloWorld2.java"
+            println "Usage: ./asmify.sh <the paths of java source files>\nFor example: ./asmify.sh jsrc/HelloWorld.java jsrc/HelloWorld2.java"
             System.exit(1)
         }
 

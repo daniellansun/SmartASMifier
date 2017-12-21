@@ -6,7 +6,7 @@ A utility to compile Java source code to ASM source code
 * Install Apache Groovy
 
 ## Usage
-```groovy SmartASMifier.groovy <the paths of java source files>```
+```./asmify.sh <the paths of java source files>```
 
 For example:  
-```groovy SmartASMifier.groovy jsrc/HelloWorld.java jsrc/HelloWorld2.java```
+```./asmify.sh jsrc/HelloWorld.java jsrc/HelloWorld2.java```
