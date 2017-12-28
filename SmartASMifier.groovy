@@ -33,7 +33,7 @@ import org.objectweb.asm.util.TraceClassVisitor
 import com.google.googlejavaformat.java.Formatter
 
 /**
- * A utility to compile Java source code to ASM source code
+ * A utility to compile Java source code to ASM source code(or bytecode as text)
  *
  * @author <a href="mailto:realbluesun@hotmail.com">Daniel.Sun</a>
  * Created on 2017/12/19
@@ -48,6 +48,10 @@ public class SmartASMifier {
             String javaSrcFileName = javaSrcFile.name
 
             List<File> classFiles = javaSrcDir.listFiles().grep { f ->
+				if (f.isDirectory()) {
+					return false
+				}
+				
                 String javaSrcFileNameWithoutExt = javaSrcFileName.replaceAll(/(.+?)[.]java$/, '$1')
                 f.name ==~ /${javaSrcFileNameWithoutExt}([$].+)?[.]class/
             }
