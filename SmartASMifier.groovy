@@ -17,20 +17,27 @@
  *  under the License.
  */
 
-@Grapes([
-        @Grab('org.ow2.asm:asm:6.0'),
-        @Grab('org.ow2.asm:asm-util:6.0'),
-        @Grab('com.google.googlejavaformat:google-java-format:1.5')
-])
 
-import javax.tools.JavaCompiler
-import javax.tools.JavaFileObject
-import javax.tools.ToolProvider
-import javax.tools.StandardJavaFileManager
+import com.google.googlejavaformat.java.Formatter
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.util.ASMifier
 import org.objectweb.asm.util.TraceClassVisitor
-import com.google.googlejavaformat.java.Formatter
+
+@Grapes([
+        @Grab('org.ow2.asm:asm:7.0'),
+        @Grab('org.ow2.asm:asm-util:7.0'),
+        @Grab('com.google.googlejavaformat:google-java-format:1.5')
+])
+import javax.tools.JavaCompiler
+@Grapes([
+        @Grab('org.ow2.asm:asm:7.0'),
+        @Grab('org.ow2.asm:asm-util:7.0'),
+        @Grab('com.google.googlejavaformat:google-java-format:1.5')
+])
+import javax.tools.JavaCompiler
+import javax.tools.JavaFileObject
+import javax.tools.StandardJavaFileManager
+import javax.tools.ToolProvider
 
 /**
  * A utility to compile Java source code to ASM source code(or bytecode as text)
@@ -38,10 +45,10 @@ import com.google.googlejavaformat.java.Formatter
  * @author <a href="mailto:realbluesun@hotmail.com">Daniel.Sun</a>
  * Created on 2017/12/19
  */
-public class SmartASMifier {
+class SmartASMifier {
     private SmartASMifier() {}
 
-    public static String asmify(boolean showBytecode, String... paths) {
+    static String asmify(boolean showBytecode, String... paths) {
         paths.each { path ->
             File javaSrcFile = new File(compileJava(path).canonicalPath) // Create a new File instance to avoid `getParentFile()` returning null
             File javaSrcDir = javaSrcFile.getParentFile()
@@ -81,7 +88,7 @@ public class SmartASMifier {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler()
         StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null)
         try {
-            Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(Arrays.asList(javaSrcFile));
+            Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(Arrays.asList(javaSrcFile))
             compiler.getTask(null, fileManager, null, null, null, compilationUnits).call()
         } finally {
             fileManager.close()
@@ -99,12 +106,12 @@ public class SmartASMifier {
 
     public static final String BYTECODE_OPT = '-b'
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         if (args.size() == 0) {
             println "Usage:\n./asmify.sh [-b] <the paths of java source files>\nShow ASM source code:\n./asmify.sh jsrc/HelloWorld.java jsrc/HelloWorld2.java\nShow bytecode:\n./asmify.sh -b jsrc/HelloWorld.java jsrc/HelloWorld2.java"
             System.exit(1)
         }
 
-        SmartASMifier.asmify(args.contains(BYTECODE_OPT), args.grep { it != BYTECODE_OPT } as String[])
+        asmify(args.contains(BYTECODE_OPT), args.grep { it != BYTECODE_OPT } as String[])
     }
 }

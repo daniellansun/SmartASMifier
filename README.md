@@ -3,7 +3,7 @@ A utility to compile Java source code to ASM source code(or bytecode as text)
 
 ## Prerequisite
 * Install JDK 8+
-* Install Apache Groovy 2.4.12+
+* Install Apache Groovy 2.5.6+
 
 ## Usage
 ```
